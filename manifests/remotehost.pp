@@ -1,29 +1,25 @@
 define sshuserconfig::remotehost(
-  $remote_hostname,
-  $remote_port = '22',
-  $remote_username,
-  $ciphers,
-  $macs,
-  $kex_algorithms,
-  $connect_timeout,
-  $identities_only = 'yes',
+  $remote_hostname      = undef,
+  $remote_port          = '22',
+  $remote_username      = undef,
+  $ciphers              = undef,
+  $macs                 = undef,
+  $kex_algorithms       = undef,
+  $connect_timeout      = undef,
+  $identities_only      = 'yes',
   $unix_user,
-  $ssh_config_dir,
+  $ssh_config_dir       = undef,
   $ssh_config_file_name = 'config',
-  $private_key_content,
-  $public_key_content,
+  $private_key_content  = undef,
+  $public_key_content   = undef,
 ) {
-
-  if $unix_user == undef {
-    fail "Expected a value for \$unix_user, got nothing"
-  }
 
   if $identities_only != 'yes' and $identities_only != 'no' {
     fail "Expected 'yes' or 'no' \$identities_only, got '${identities_only}'"
   }
 
   if $ssh_config_dir == undef {
-    if $ssh_config_dir == 'root' {
+    if $unix_user == 'root' {
       $ssh_config_dir_prefix = "/root/.ssh"
     } else {
       $ssh_config_dir_prefix = "/home/${unix_user}/.ssh"
@@ -39,21 +35,30 @@ define sshuserconfig::remotehost(
   $concat_namespace = "ssh_userconfig_${unix_user}"
   $fragment_name = "${concat_namespace}_${title}"
 
-  $synthesized_privkey_path = "${ssh_config_dir_prefix}/id_rsa_${title}"
-  $synthesized_pubkey_path = "${ssh_config_dir_prefix}/id_rsa_${title}.pub"
+  if $private_key_content == undef {
+    $synthesized_privkey_path = undef
+  } else {
+    $synthesized_privkey_path = "${ssh_config_dir_prefix}/id_rsa_${title}"
 
-  file { $synthesized_privkey_path :
-    ensure  => 'present',
-    content => $private_key_content,
-    owner   => $unix_user,
-    mode    => '0600',
+    file { $synthesized_privkey_path :
+      ensure  => 'present',
+      content => $private_key_content,
+      owner   => $unix_user,
+      mode    => '0600',
+    }
   }
 
-  file { $synthesized_pubkey_path :
-    ensure  => 'present',
-    content => $public_key_content,
-    owner   => $unix_user,
-    mode    => '0600',
+  if $public_key_content == undef {
+    $synthesized_pubkey_path = undef
+  } else {
+    $synthesized_pubkey_path = "${ssh_config_dir_prefix}/id_rsa_${title}.pub"
+
+    file { $synthesized_pubkey_path :
+      ensure  => 'present',
+      content => $public_key_content,
+      owner   => $unix_user,
+      mode    => '0600',
+    }
   }
 
   ensure_resource(
