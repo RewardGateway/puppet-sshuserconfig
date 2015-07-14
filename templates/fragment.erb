@@ -1,9 +1,10 @@
 Host <%= @title %>
-  HostName <%= @remote_hostname %>
-  Port <%= @remote_port %>
-  User <%= @remote_username %>
-  IdentityFile <%= @synthesized_privkey_path %>
-  IdentitiesOnly yes
-<% if @connect_timeout -%>
-  ConnectTimeout <%=  @connect_timeout %>
-<% end %>
+<%- if @remote_hostname          %>    HostName       <%= @remote_hostname          %><% end -%>
+<%- if @remote_port              %>    Port           <%= @remote_port              %><% end -%>
+<%- if @remote_username          %>    User           <%= @remote_username          %><% end -%>
+<%- if @synthesized_privkey_path %>    IdentityFile   <%= @synthesized_privkey_path %><% end -%>
+<%- if @identities_only          %>    IdentitiesOnly <%= @identitiesonly           %><% end -%>
+<%- if @ciphers                  %>    Ciphers        <%= @ciphers                  %><% end -%>
+<%- if @macs                     %>    MACs           <%= @macs                     %><% end -%>
+<%- if @kex_algorithms           %>    KexAlgorithms  <%= @kexalgorithms            %><% end -%>
+<%- if @connect_timeout          %>    ConnectTimeout <%= @connect_timeout          %><% end -%>

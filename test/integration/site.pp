@@ -3,20 +3,35 @@
 
 # Test the module
 sshuserconfig::remotehost { 'someidentifier' :
-  unix_user           => 'vagrant',
   remote_hostname     => 'github.com',
   remote_username     => 'git',
-  private_key_content => "some privkey content\n",
-  public_key_content  => "some pubkey content\n",
+  unix_user           => 'vagrant',
+  private_key_content => "some vagrant privkey content\n",
+  public_key_content  => "some vagrant pubkey content\n",
   ssh_config_dir      => '/tmp'
 }
 
 sshuserconfig::remotehost { 'someidentifier2' :
-  unix_user           => 'vagrant',
   remote_hostname     => 'github.com',
   remote_username     => 'git',
-  private_key_content => "some privkey content2\n",
-  public_key_content  => "some pubkey content2\n",
+  unix_user           => 'vagrant',
+  private_key_content => "some vagrant privkey content2\n",
+  public_key_content  => "some vagrant pubkey content2\n",
   ssh_config_dir      => '/tmp',
   connect_timeout     => 10
+}
+
+sshuserconfig::remotehost { 'someidentifier3 someidentifier4' :
+  remote_hostname      => 'bitbucket.org',
+  remote_port          => '2222',
+  remote_username      => 'git',
+  ciphers              => 'aes256-ctr',
+  macs                 => 'hmac-sha2-512',
+  kex_algorithms       => 'diffie-hellman-group14-sha1',
+  connect_timeout      => 10
+  identities_only      => 'no'
+  unix_user            => 'root',
+  ssh_config_file_name => 'unsual_config'
+  private_key_content  => "some root privkey content\n",
+  public_key_content   => "some root pubkey content\n",
 }
