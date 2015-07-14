@@ -18,7 +18,7 @@ define sshuserconfig::remotehost(
     fail "Expected a value for \$unix_user, got nothing"
   }
 
-  if $identities_only != 'yes' && $identities_only != 'no' {
+  if $identities_only != 'yes' and $identities_only != 'no' {
     fail "Expected 'yes' or 'no' \$identities_only, got '${identities_only}'"
   }
 
