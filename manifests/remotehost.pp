@@ -1,4 +1,5 @@
 define sshuserconfig::remotehost(
+  $config_title         = $title,
   $remote_hostname      = undef,
   $remote_port          = '22',
   $remote_username      = undef,
@@ -10,6 +11,7 @@ define sshuserconfig::remotehost(
   $unix_user,
   $ssh_config_dir       = undef,
   $ssh_config_file_name = 'config',
+  $key_name             = $title,
   $private_key_content  = undef,
   $public_key_content   = undef,
 ) {
@@ -38,7 +40,7 @@ define sshuserconfig::remotehost(
   if $private_key_content == undef {
     $synthesized_privkey_path = undef
   } else {
-    $synthesized_privkey_path = "${ssh_config_dir_prefix}/id_rsa_${title}"
+    $synthesized_privkey_path = "${ssh_config_dir_prefix}/id_rsa_${key_name}"
 
     file { $synthesized_privkey_path :
       ensure  => 'present',
@@ -51,7 +53,7 @@ define sshuserconfig::remotehost(
   if $public_key_content == undef {
     $synthesized_pubkey_path = undef
   } else {
-    $synthesized_pubkey_path = "${ssh_config_dir_prefix}/id_rsa_${title}.pub"
+    $synthesized_pubkey_path = "${ssh_config_dir_prefix}/id_rsa_${key_name}.pub"
 
     file { $synthesized_pubkey_path :
       ensure  => 'present',
