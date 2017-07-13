@@ -1,3 +1,4 @@
+# sshuserconfig::remotehost
 define sshuserconfig::remotehost(
   $config_title         = $title,
   $remote_hostname      = undef,
@@ -8,7 +9,7 @@ define sshuserconfig::remotehost(
   $kex_algorithms       = undef,
   $connect_timeout      = undef,
   $identities_only      = 'yes',
-  $unix_user,
+  $unix_user            = 'root',
   $ssh_config_dir       = undef,
   $ssh_config_file_name = 'config',
   $key_name             = $title,
@@ -22,7 +23,7 @@ define sshuserconfig::remotehost(
 
   if $ssh_config_dir == undef {
     if $unix_user == 'root' {
-      $ssh_config_dir_prefix = "/root/.ssh"
+      $ssh_config_dir_prefix = '/root/.ssh'
     } else {
       $ssh_config_dir_prefix = "/home/${unix_user}/.ssh"
     }
